@@ -10,10 +10,10 @@ class Homestead
         config.ssh.forward_agent = true
 
         # Configure The Box
-        config.vm.define settings["name"] ||= "homestead-7"
-        config.vm.box = settings["box"] ||= "laravel/homestead"
-        config.vm.box_version = settings["version"] ||= ">= 4.0.0"
-        config.vm.hostname = settings["hostname"] ||= "homestead"
+        config.vm.define settings["name"] ||= "homestead-weicheche"
+        config.vm.box = settings["box"] ||= "weicheche"
+        # config.vm.box_version = settings["version"] ||= ">= 4.0.0"
+        config.vm.hostname = settings["hostname"] ||= "homestead-weicheche"
 
         # Configure A Private Network IP
         if settings["ip"] != "autonetwork"
@@ -31,7 +31,7 @@ class Homestead
 
         # Configure A Few VirtualBox Settings
         config.vm.provider "virtualbox" do |vb|
-            vb.name = settings["name"] ||= "homestead-7"
+            vb.name = settings["name"] ||= "homestead-weicheche"
             vb.customize ["modifyvm", :id, "--memory", settings["memory"] ||= "2048"]
             vb.customize ["modifyvm", :id, "--cpus", settings["cpus"] ||= "1"]
             vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
@@ -210,8 +210,13 @@ class Homestead
                         end
                         params += " )"
                     end
+
+                    if !site.include? 'zray'
+                        site['zray'] = 'true'
+                    end
+
                     s.path = scriptDir + "/serve-#{type}.sh"
-                    s.args = [site["map"], site["to"], site["port"] ||= "80", site["ssl"] ||= "443", site["php"] ||= "7.2", params ||= "", site["zray"] ||= "false"]
+                    s.args = [site["map"], site["to"], site["port"] ||= "80", site["ssl"] ||= "443", site["php"] ||= "7.2", params ||= "", site["zray"] ||= "true"]
 
                     if site["zray"] == 'true'
                         config.vm.provision "shell" do |s|
@@ -363,11 +368,11 @@ class Homestead
         end
 
         # Update Composer On Every Provision
-        config.vm.provision "shell" do |s|
-            s.name = "Update Composer"
-            s.inline = "sudo /usr/local/bin/composer self-update --no-progress && sudo chown -R vagrant:vagrant /home/vagrant/.composer/"
-            s.privileged = false
-        end
+        # config.vm.provision "shell" do |s|
+            # s.name = "Update Composer"
+            # s.inline = "sudo /usr/local/bin/composer self-update --no-progress && sudo chown -R vagrant:vagrant /home/vagrant/.composer/"
+            # s.privileged = false
+        # end
 
         # Configure Blackfire.io
         if settings.has_key?("blackfire")
