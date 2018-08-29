@@ -1,0 +1,63 @@
+---
+# 这几个一般不用改
+ip: 192.168.10.10
+memory: 2048
+cpus: 1
+provider: virtualbox
+box: weicheche
+
+authorize: ~/.ssh/id_rsa.pub
+
+keys:
+    - ~/.ssh/id_rsa
+
+# 本地和虚拟机目录映射
+folders:
+    - map: ~/Application/weicheche/wx
+      to: /home/vagrant/code/weicheche/wx
+      type: nfs
+    - map: ~/Application/weicheche/mp
+      to: /home/vagrant/code/weicheche/mp
+      type: nfs
+    - map: ~/Application/weicheche/coupon
+      to: /home/vagrant/code/weicheche/coupon
+      type: nfs
+
+# 站点和虚拟机目录映射
+sites:
+    - map: dev.wx.weicheche.cn
+      to: /home/vagrant/code/weicheche/wx
+    - map: dev.mp.weicheche.cn
+      to: /home/vagrant/code/weicheche/mp/public
+      port: 80
+      # 要用引号
+      php: "7.2" 
+      # 要用引号。默认是"true"
+      zray: "false"
+      # type: 针对 php 框架做的nginx 配置文件定制，可用：laravel、phalcon、thinkphp。默认 laravel
+      type: laravel
+      # params 对应 nginx 中的 fastcgi_param，在 php 中可用 $_SERVER 访问。
+      # 仅针对该网站，如果是针对所有网站，可设置下面的 variables 变量
+      params:
+          - key: TABD
+            value: yesIdo
+    - map: dev.coupon.weicheche.cn
+      to: /home/vagrant/code/weicheche/coupon/src/app_coupon/webroot
+
+# php 环境变量，针对所有版本的 php-fpm。对应 $_SERVER
+variables:
+    - key: ENVIRON
+      value: develop
+
+
+# 数据库，不使用则不用管
+databases:
+    - weicheche
+
+# 本机和虚拟机端口映射
+ports:
+    - send: 80
+      to: 80
+    - send: 3306
+      to: 3306
+      protocol: tcp
