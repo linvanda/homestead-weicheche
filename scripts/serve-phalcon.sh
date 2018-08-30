@@ -22,7 +22,7 @@ fi
 block="server {
     listen ${3:-80};
     listen ${4:-443} ssl http2;
-    server_name .$1;
+    server_name $1;
     root \"$2\";
 
     index index.html index.htm index.php;

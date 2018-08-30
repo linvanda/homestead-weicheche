@@ -27,22 +27,24 @@ folders:
 sites:
     - map: dev.wx.weicheche.cn
       to: /home/vagrant/code/weicheche/wx
+      # params 对应 nginx 中的 fastcgi_param，在 php 中可用 $_SERVER 访问。
+      # 仅针对该网站，如果是针对所有网站，可设置下面的 variables 变量
+      # 此处的设置会覆盖 variables 的设置
+      params:
+          - key: ENVIRON
+            value: dev
+      # type: 针对 php 框架做的nginx 配置文件定制，可用：laravel、phalcon、thinkphp。默认 laravel
+      type: thinkphp
     - map: dev.mp.weicheche.cn
       to: /home/vagrant/code/weicheche/mp/public
       port: 80
       # 要用引号
-      php: "7.2" 
+      php: "7.2"
       # 要用引号。默认是"true"
-      zray: "false"
-      # type: 针对 php 框架做的nginx 配置文件定制，可用：laravel、phalcon、thinkphp。默认 laravel
-      type: laravel
-      # params 对应 nginx 中的 fastcgi_param，在 php 中可用 $_SERVER 访问。
-      # 仅针对该网站，如果是针对所有网站，可设置下面的 variables 变量
-      params:
-          - key: TABD
-            value: yesIdo
+      zray: "true"
     - map: dev.coupon.weicheche.cn
       to: /home/vagrant/code/weicheche/coupon/src/app_coupon/webroot
+      type: phalcon
 
 # php 环境变量，针对所有版本的 php-fpm。对应 $_SERVER
 variables:
